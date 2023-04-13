@@ -2,8 +2,8 @@ public class DynamicArray<T> implements Iterable<T> {
     private static final int INTIAL_CAPACITY = 16;
 
     private T[] array;
-    private int capacity;
-    private int len;
+    private int capacity = 0;       // Actual array size
+    private int len = 0;            // lenght of the array from users' view
 
     public DynamicArray() {
         this(INTIAL_CAPACITY);
@@ -72,6 +72,7 @@ public class DynamicArray<T> implements Iterable<T> {
     }
 
     public void add(T value) {
+        // if need to resize
         if (len + 1 > capacity) {
             capacity = capacity == 0 ? 1 : capacity * 2;
             T[] newArray = (T[]) new Object[capacity];
@@ -79,6 +80,7 @@ public class DynamicArray<T> implements Iterable<T> {
             for (int i = 0; i < len; i++) {
                 newArray[i] = array[i];
             }
+            // array has extra nulls padded.
             array = newArray;
         }
         // 先赋值，后自增（len = index+1）
@@ -91,6 +93,8 @@ public class DynamicArray<T> implements Iterable<T> {
         if (len + 1 > capacity) {
             capacity = capacity == 0 ? 1 : capacity * 2;
             T[] newArray = (T[]) new Object[capacity];
+            // coping each element into new array, and at the specified position
+            // insert the new element.
             for (int f = 0, s = 0; f < len + 1; f++) {
                 if (f == index) {
                     newArray[f] = value;
@@ -99,6 +103,8 @@ public class DynamicArray<T> implements Iterable<T> {
                 newArray[f] = array[s++];
             }
         } else {
+            // from the end of the array and move each element backward 1 position,
+            // and insert the new element at the specified position.
             for (int i = len; i >= index; i--) {
                 if (i != index) {
                     array[i] = array[i - 1];
@@ -110,10 +116,12 @@ public class DynamicArray<T> implements Iterable<T> {
         len++;
     }
 
+    // Remove the element at the specified index in this list.
     public T removeAt(int index) {
         if (index >= len || index < 0)
             throw new IndexOutOfBoundsException();
         T data = array[index];
+        // remove the element and move each afterward element forward.
         for (int i = index; i < len - 1; i++) {
             array[i] = array[i + 1];
         }
