@@ -28,6 +28,10 @@ public class DoubleList<T> implements Iterable<T> {
         return size == 0;
     }
 
+    public boolean contains(T value) {
+        return indexOf(value) != -1;
+    }
+
     public void clear() {
         Node<T> trav = head;
         while (trav != null) {

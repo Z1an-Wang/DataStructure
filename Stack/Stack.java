@@ -14,6 +14,13 @@ public class Stack<T> implements Iterable<T> {
     public boolean isEmpty(){
         return list.size()==0;
     }
+    public boolean contains(T elem) {
+        return list.contains(elem);
+    }
+    public void clear() {
+        list.clear();
+    }
+
     public void push(T elem){
         list.addFirst(elem);
     }

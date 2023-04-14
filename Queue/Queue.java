@@ -7,17 +7,20 @@ public class Queue<T> implements Iterable<T> {
 
     public Queue() {
     }
-
     public Queue(T firstElem) {
         offer(firstElem);
     }
-
     public int size() {
         return list.size();
     }
-
     public boolean isEmpty() {
         return list.size() == 0;
+    }
+    public boolean contains(T elem) {
+        return list.contains(elem);
+    }
+    public void clear() {
+        list.clear();
     }
 
     public void offer(T elem) {
