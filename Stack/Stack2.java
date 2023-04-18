@@ -37,6 +37,31 @@ public class Stack2<T> {
         return size == 0;
     }
 
+    public boolean contains(T elem) {
+        if(head == null){
+            return false;
+        }
+        Node<T> temp = head;
+        while (temp != null) {
+            if (temp.data.equals(elem))
+                return true;
+            temp = temp.next;
+        }
+        return false;
+    }
+
+    public void clear() {
+        Node<T> temp = head;
+        while (temp != null) {
+            Node<T> t = temp.next;
+            temp.data = null;
+            temp.next = null;
+            temp = t;
+        }
+        head = null;
+        size = 0;
+    }
+
     public void push(T elem) {
         if (isEmpty()) {
             head = new Node<T>(elem, null);
