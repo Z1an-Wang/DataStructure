@@ -185,6 +185,39 @@ public class BinaryTree<T> {
         }
         return result;
     }
+    public List<List<T>> orderByLevel(TreeNode<T> root) {
+        List<List<T>> result = new LinkedList<>();
+        if (root == null)
+            return result;
+        Queue<TreeNode<T>> q = new LinkedList<>();
+        q.offer(root);
+        while (!q.isEmpty()) {
+            List<T> levelItems = new LinkedList<>();
+            int len = q.size();
+            while (len > 0) {
+                TreeNode<T> tempNode = q.poll();
+                levelItems.add(tempNode.data);
+                if (tempNode.left != null) q.offer(tempNode.left);
+                if (tempNode.right != null) q.offer(tempNode.right);
+                len--;
+            }
+            result.add(levelItems);
+        }
+        return result;
+    }
+    public void orderByLevel2(TreeNode<T> node, List<List<T>> result, int level) {
+        if (node == null)
+            return;
+        level++;
+        if (result.size() < level) {
+            List<T> item = new LinkedList<>();
+            result.add(item);
+        }
+        result.get(level - 1).add(node.data);
+        orderByLevel2(node.left, result, level);
+        orderByLevel2(node.right, result, level);
+        return;
+    }
 
     public static void main(String[] args) {
         Integer[] arr = {5,4,6,1,2,7,8};
@@ -205,7 +238,7 @@ public class BinaryTree<T> {
          *     【迭代】前中后序遍历二叉树
          *************************************/
         result = bt.preOrder(treeRoot);
-        Iterator it = result.iterator();
+        Iterator<Integer> it = result.iterator();
         while (it.hasNext()) {
             System.out.print(it.next());
         }
@@ -254,5 +287,11 @@ public class BinaryTree<T> {
             System.out.print(it.next());
         }
         System.out.println();
+        List<List<Integer>> levelList = new LinkedList<>();
+        levelList = bt.orderByLevel(treeRoot);
+        System.out.println(levelList);
+        levelList = new LinkedList<>();
+        bt.orderByLevel2(treeRoot, levelList, 0);
+        System.out.println(levelList);
     }
 }
