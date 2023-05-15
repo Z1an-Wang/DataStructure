@@ -91,6 +91,9 @@ public class BinaryTree<T> {
             return result;
         LinkedList<TreeNode<T>> stack = new LinkedList<>();
         TreeNode<T> cur = root;
+        // 循环结束的条件是：当前指针为空并且迭代栈为空。
+        // 因为当前指针不为空，迭代栈为空的情况是：当根节点被处理后，此时栈为空，cur指向左子树的根节点。
+        // 当前指针为空，迭代栈不为空的情况是：当前指针指向了目前最左元素的左孩子，而这个孩子肯定是nullptr
         while (cur != null || !stack.isEmpty()) {
             if (cur != null) {              // 指针来访问节点，访问到最底层最左边的元素
                 stack.addFirst(cur);        // 将节点放进栈
