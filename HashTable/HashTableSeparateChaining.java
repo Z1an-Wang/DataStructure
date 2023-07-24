@@ -39,12 +39,6 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         return size == 0;
     }
 
-    // Convert a hash value to an index. Essentially, this strips the
-    // negative sign and places the hash value in the domain [0, capacity)
-    private int normalizeIndex(int keyHash) {
-        return (keyHash & 0x7FFFFFFF) % capacity;
-    }
-
     // Clears all the contents of the hash-table
     public void clear() {
         Arrays.fill(table, null);
@@ -57,6 +51,9 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
 
     // Returns true/false depending on whether a key is in the hash-table
     public boolean hasKey(K key) {
+        if(key == null){
+            return false;
+        }
         int bucketIndex = normalizeIndex(key.hashCode());
         return bucketSeekEntry(bucketIndex, key) != null;
     }
@@ -79,7 +76,12 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         if (key == null)
             return null;
         int bucketIndex = normalizeIndex(key.hashCode());
-        return bucketRemoveEntry(bucketIndex, key);
+        Entry<K, V> temp = bucketSeekEntry(bucketIndex, key);
+        if(temp!=null){
+            return temp.getValue();
+        } else {
+            return null;
+        }
     }
 
     // Remove a key from the map and return the value.
@@ -91,6 +93,16 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         return bucketRemoveEntry(bucketIndex, key);
     }
 
+
+    /******************************************
+     *          Private Method
+     ********************************************/
+    // Convert a hash value to an index. Essentially, this strips the
+    // negative sign and places the hash value in the domain [0, capacity)
+    private int normalizeIndex(int keyHash) {
+        return (keyHash & 0x7FFFFFFF) % capacity;
+    }
+
     // Find and Return a particular entry in a given bucket if it exist, otherwise
     // null
     private Entry<K, V> bucketSeekEntry(int bucketIndex, K key) {
@@ -100,7 +112,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         if (bucket == null)
             return null;
         for (Entry<K, V> entry : bucket) {
-            if (entry.key.equals(key))
+            if (entry.getKey().equals(key))
                 return entry;
         }
         return null;
@@ -114,7 +126,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         if (bucket == null)
             table[bucketIndex] = bucket = new LinkedList<>();
 
-        Entry<K, V> existEntry = bucketSeekEntry(bucketIndex, entry.key);
+        Entry<K, V> existEntry = bucketSeekEntry(bucketIndex, entry.getKey());
         if (existEntry == null) {
             // 说明桶中不存在指定的 entry。
             bucket.add(entry);
@@ -122,8 +134,8 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
                 resizeTable();
             return null;
         } else {
-            V oldValue = existEntry.value;
-            existEntry.value = entry.value;
+            V oldValue = existEntry.getValue();
+            existEntry.value = entry.getValue();
             return oldValue;
         }
     }
@@ -135,7 +147,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
             LinkedList<Entry<K, V>> list = table[bucketIndex];
             list.remove(entry);
             size--;
-            return entry.value;
+            return entry.getValue();
         } else {
             return null;
         }
@@ -173,7 +185,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         for (LinkedList<Entry<K, V>> bucket : table) {
             if (bucket != null) {
                 for (Entry<K, V> entry : bucket) {
-                    keys.add(entry.key);
+                    keys.add(entry.getKey());
                 }
             }
         }
@@ -186,7 +198,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         for (LinkedList<Entry<K, V>> bucket : table) {
             if (bucket != null) {
                 for (Entry<K, V> entry : bucket) {
-                    values.add(entry.value);
+                    values.add(entry.getValue());
                 }
             }
         }
@@ -280,6 +292,14 @@ class Entry<K, V> {
         this.key = key;
         this.value = value;
         this.hash = key.hashCode(); // 计算键的哈希值。
+    }
+
+    public K getKey(){
+        return key;
+    }
+
+    public V getValue(){
+        return value;
     }
 
     // Not Overriding the Object equals method.
