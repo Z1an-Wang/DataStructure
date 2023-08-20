@@ -115,7 +115,7 @@ public class PriorityQueue<T extends Comparable<T>> {
      *********************************************/
     // Remove a node at particular index, O(log(n))
     private T removeAt(int i) {
-        if (isEmpty())
+        if (isEmpty() || i>=heapSize )
             return null;
         T data = heap.get(i);
         heapSize--;
@@ -131,7 +131,36 @@ public class PriorityQueue<T extends Comparable<T>> {
         return data;
     }
 
-    private void sink(int i) {
+    private void sink(int i){
+        int l = 2*i+1;
+        int r = 2*i+2;
+
+        int minIndex = i;
+
+        if(r<heapSize && heap.get(minIndex).compareTo(heap.get(r)) > 0){
+            minIndex = r;
+        }
+        if(l<heapSize && heap.get(minIndex).compareTo(heap.get(l)) > 0){
+            minIndex = l;
+        }
+
+        if(minIndex != i){
+            swap(i, minIndex);
+            sink(minIndex);
+        }
+    }
+
+    private void swim(int i){
+        int parent = (i-1)/2;
+
+        if(parent>=0 && heap.get(i).compareTo(heap.get(parent)) <0){
+            swap(i, parent);
+            swim(parent);
+        }
+    }
+
+
+    private void sink2(int i) {
         int swapIndex = -1;
         while ((swapIndex = isValidSubTree(i)) >= 0) {
             swap(i, swapIndex);
@@ -139,7 +168,7 @@ public class PriorityQueue<T extends Comparable<T>> {
         }
     }
 
-    private void swim(int i) {
+    private void swim2(int i) {
         int swapIndex = -1;
         while ((swapIndex = isVaildSuperTree(i)) >= 0) {
             swap(i, swapIndex);
@@ -189,11 +218,10 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     // Swap two nodes. Assume i & j are valid. O(1)
     private void swap(int i, int j) {
-        T nodeI = heap.get(i);
-        T nodeJ = heap.get(j);
+        T tmp = heap.get(i);
 
-        heap.set(i, nodeJ);
-        heap.set(j, nodeI);
+        heap.set(i, heap.get(j));
+        heap.set(j, tmp);
     }
 
     // Recursively check if this heap is a min heap
