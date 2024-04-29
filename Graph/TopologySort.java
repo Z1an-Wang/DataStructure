@@ -27,6 +27,9 @@ public class TopologySort {
             { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 }, // y
     };
 
+    /******************************************************
+     *       Kahn Algorithm Based on edge check
+     ******************************************************/
     public static List<Integer> Kahn(int[][] adjMatrix) {
         int n = adjMatrix.length;
 
@@ -39,7 +42,7 @@ public class TopologySort {
         boolean allVisited = false;
         while (!allVisited) {
 
-            // 找到所有入度为 0 的点。
+            // 找到所有入度为 0 ，且未被访问的节点。
             for (int i = 0; i < n; i++) {
                 if (!visited[i] && !hasInNeighbour(adjMatrix, i)) {
                     queue.offer(i);
@@ -47,7 +50,7 @@ public class TopologySort {
                 }
             }
 
-            // 如果图中没有一个节点的 入度 为 0，且还有节点未被访问，则证明图中有环。
+            // 如果图中没有一个符合要求的节点，且还有节点未被访问，则证明图中有环。
             if (queue.isEmpty() && !allVisited) {
                 throw new IllegalArgumentException("DAG contains a cycle!");
             }
@@ -89,8 +92,64 @@ public class TopologySort {
         return res;
     }
 
+
+
+    /******************************************************
+     *         Kahn Algorithm Based on in degree
+     ******************************************************/
+    public static List<Integer> Kahn_2(int[][] adjMatrix) {
+        int n = adjMatrix.length;
+
+        List<Integer> res = new LinkedList<>();
+        LinkedList<Integer> queue = new LinkedList<>();
+
+        int[] inDegree = new int[n];
+        boolean[] visited = new boolean[n];
+
+        // calculate in-degree for each vertex.
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                inDegree[i] += adjMatrix[j][i];
+            }
+        }
+
+        boolean allVisited = false;
+        while (!allVisited) {
+
+            // 找到所有入度为 0 ，且未被访问的节点。
+            for (int i = 0; i < n; i++) {
+                if (!visited[i] && inDegree[i] == 0) {
+                    queue.offer(i);
+                    visited[i] = true;
+                }
+            }
+
+            // 如果图中没有一个符合要求的节点，且还有节点未被访问，则证明图中有环。
+            if (queue.isEmpty() && !allVisited) {
+                throw new IllegalArgumentException("DAG contains a cycle!");
+            }
+
+            // 从 Queue 中获取入度为 0 的节点，加入结果 list，并删除以该节点为起点的边。
+            while (!queue.isEmpty()) {
+                int cur = queue.poll();
+                res.add(cur);
+
+                List<Integer> out = findOutNeighbour(adjMatrix, cur);
+                for (int i : out) {
+                    inDegree[i]--;
+                }
+            }
+
+            allVisited = true;
+            for (boolean i : visited) {
+                allVisited = allVisited && i;
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
-        List<Integer> res = Kahn(_adjMatrix);
+        List<Integer> res = Kahn_2(_adjMatrix);
         System.out.println(res);
     }
 }
