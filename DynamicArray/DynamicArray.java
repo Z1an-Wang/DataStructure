@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class DynamicArray<T> implements Iterable<T> {
     private static final int INTIAL_CAPACITY = 16;
 
@@ -29,6 +31,7 @@ public class DynamicArray<T> implements Iterable<T> {
         }
         this.capacity = 1 << radix;
         this.array = (T[]) new Object[this.capacity];
+        System.arraycopy(array, 0, this.array, 0, array.length);
     }
 
     public int size() {

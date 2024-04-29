@@ -15,7 +15,7 @@ public class PriorityQueue<T extends Comparable<T>> {
         heap = new ArrayList<>(size);
     }
 
-    // Construct a priority queue
+    // Construct a priority queue (Min HEAP)
     public PriorityQueue(T[] elems) {
         heapSize = heapCapacity = elems.length;
         heap = new ArrayList<>(heapCapacity);
@@ -59,9 +59,16 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     // Determine if the element is in heap, O(1)
     public boolean contains(T elem) {
-        for (int i = 0; i < heapSize; i++) {
-            if (heap.get(i).equals(elem))
-                return true;
+        if (elem == null) {
+            for (int i = 0; i < heapSize; i++) {
+                if (heap.get(i) == null)
+                    return true;
+            }
+        } else {
+            for (int i = 0; i < heapSize; i++) {
+                if (elem.equals(heap.get(i)))
+                    return true;
+            }
         }
         return false;
     }
@@ -102,7 +109,7 @@ public class PriorityQueue<T extends Comparable<T>> {
             return false;
         // Linear removal via search, O(n)
         for (int i = 0; i < heapSize; i++) {
-            if (heap.get(i).equals(elem)) {
+            if (elem.equals(heap.get(i))) {
                 removeAt(i);
                 return true;
             }
@@ -153,6 +160,7 @@ public class PriorityQueue<T extends Comparable<T>> {
     private void swim(int i){
         int parent = (i-1)/2;
 
+        // Theoretically, the elements stored in the QP are NOT allowed to be NULL.
         if(parent>=0 && heap.get(i).compareTo(heap.get(parent)) <0){
             swap(i, parent);
             swim(parent);
