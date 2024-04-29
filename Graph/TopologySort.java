@@ -27,6 +27,8 @@ public class TopologySort {
             { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 }, // y
     };
 
+
+
     /******************************************************
      *       Kahn Algorithm Based on edge check
      ******************************************************/
@@ -41,7 +43,6 @@ public class TopologySort {
 
         boolean allVisited = false;
         while (!allVisited) {
-
             // 找到所有入度为 0 ，且未被访问的节点。
             for (int i = 0; i < n; i++) {
                 if (!visited[i] && !hasInNeighbour(adjMatrix, i)) {
@@ -49,23 +50,19 @@ public class TopologySort {
                     visited[i] = true;
                 }
             }
-
             // 如果图中没有一个符合要求的节点，且还有节点未被访问，则证明图中有环。
             if (queue.isEmpty() && !allVisited) {
                 throw new IllegalArgumentException("DAG contains a cycle!");
             }
-
             // 从 Queue 中获取入度为 0 的节点，加入结果 list，并删除以该节点为起点的边。
             while (!queue.isEmpty()) {
                 int cur = queue.poll();
                 res.add(cur);
-
                 List<Integer> out = findOutNeighbour(adjMatrix, cur);
                 for (int i : out) {
                     adjMatrix[cur][i] = 0;
                 }
             }
-
             allVisited = true;
             for (boolean i : visited) {
                 allVisited = allVisited && i;
@@ -115,7 +112,6 @@ public class TopologySort {
 
         boolean allVisited = false;
         while (!allVisited) {
-
             // 找到所有入度为 0 ，且未被访问的节点。
             for (int i = 0; i < n; i++) {
                 if (!visited[i] && inDegree[i] == 0) {
@@ -123,23 +119,19 @@ public class TopologySort {
                     visited[i] = true;
                 }
             }
-
             // 如果图中没有一个符合要求的节点，且还有节点未被访问，则证明图中有环。
             if (queue.isEmpty() && !allVisited) {
                 throw new IllegalArgumentException("DAG contains a cycle!");
             }
-
             // 从 Queue 中获取入度为 0 的节点，加入结果 list，并删除以该节点为起点的边。
             while (!queue.isEmpty()) {
                 int cur = queue.poll();
                 res.add(cur);
-
                 List<Integer> out = findOutNeighbour(adjMatrix, cur);
                 for (int i : out) {
                     inDegree[i]--;
                 }
             }
-
             allVisited = true;
             for (boolean i : visited) {
                 allVisited = allVisited && i;
@@ -148,8 +140,51 @@ public class TopologySort {
         return res;
     }
 
+
+
+    /******************************************************
+     *       Topology Sort based on DFS traverse
+     ******************************************************/
+    public static List<Integer> TP_Sort(int[][] adjMatrix) {
+        int n = adjMatrix.length;
+
+        boolean[] visited = new boolean[n];
+        boolean[] stacked = new boolean[n];
+        Arrays.fill(visited, false);
+        Arrays.fill(stacked, false);
+
+        List<Integer> res = new LinkedList<>();
+
+        for (int i = 0; i < n; i++)
+            if (!visited[i])
+                TS_Visit(adjMatrix, res, visited, stacked, i);
+
+        return res;
+    }
+
+    private static void TS_Visit(int[][] adjMatrix, List<Integer> res, boolean[] visited, boolean[] stacked, int vertex) {
+
+        // 如果节点已经被 stack 说明一个 unvisited 的节点已经被访问了，即：图中存在环。
+        if (stacked[vertex])
+            throw new IllegalArgumentException("DAG contains a cycle!");
+
+        if (!visited[vertex]) {
+            // 标记当前节点已经在 stack 中了。
+            stacked[vertex] = true;
+            List<Integer> out = findOutNeighbour(adjMatrix, vertex);
+            for (int oi : out)
+                // 注意：必须是还未访问过的节点才能继续访问（因为在 DFS 搜索过程中有的节点可能被访问过了）
+                if (!visited[oi])
+                    TS_Visit(adjMatrix, res, visited, stacked, oi);
+
+            visited[vertex] = true;
+            res.add(vertex);
+        }
+    }
+
+
     public static void main(String[] args) {
-        List<Integer> res = Kahn_2(_adjMatrix);
+        List<Integer> res = Kahn(_adjMatrix);
         System.out.println(res);
     }
 }
