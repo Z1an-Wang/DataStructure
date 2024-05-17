@@ -17,10 +17,11 @@ public class Trie {
     }
 
     // 字典树节点
-    private static class TrieNode {
+    public static class TrieNode {
         char ch;
         int num;                // 有多少单词通过这个节点，即由根至该节点组成的字符串模式出现的次数
         int wordEnding = 0;     // 以这个节点结尾的单词个数。
+        // 节点存储子节点，可以使用长度为 26 的数组，但是比较浪费空间。
         HashMap<Character, TrieNode> children;
 
         TrieNode(char c, int n) {
@@ -81,7 +82,7 @@ public class Trie {
 
     // 在字典树中查找一个完全匹配的单词.
     public boolean contains(String str) {
-        return contains(str, false);
+        return contains(str, true);
     }
 
     public boolean contains(String str, boolean isWord) {
