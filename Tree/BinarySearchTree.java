@@ -117,9 +117,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     // To iteratively add the value in the BST
-    private boolean insert(T elem) {
+    public boolean insert(T elem) {
         if (root == null) {
             root = new Node(null, null, elem);
+            count++;
             return true;
         }
         // 因为插入节点需要知道父节点，所以采用双指针的思路。
@@ -145,6 +146,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } else {
             parent.right = newNode;
         }
+        count++;
         return true;
     }
 
@@ -218,7 +220,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
             if (comp == 0) {
                 // 移除目标节点，并返回 true。
                 deleteNode(parent, cur);
-                count++;
+                count--;
                 return true;
             } else if (comp < 0) {
                 parent = cur;
@@ -230,11 +232,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
         return false;
     }
+
     private void deleteNode(Node parent, Node cur) {
         // Case 1 & 2：节点的左子树为空（包含节点为叶子节点的情况），所以父节点连接到右子树，
-        if(cur.left==null){
+        if (cur.left == null) {
             // 如果父节点为空，即表示删除的是根节点。
-            if(parent==null){
+            if (parent == null) {
                 root = cur.right;
             }
             // 判断连接到父节点的左子树还是右子树。
@@ -245,13 +248,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
             }
         }
         // Case 3：节点的右子树为空，所以父节点连接到左子树，
-        else if(cur.right==null){
+        else if (cur.right == null) {
             // 如果父节点为空，即表示删除的是根节点。
-            if(parent==null){
+            if (parent == null) {
                 root = cur.left;
             }
             // 判断连接到父节点的左子树还是右子树。
-            else if(cur==parent.left){
+            else if (cur == parent.left) {
                 parent.left = cur.left;
             } else {
                 parent.right = cur.left;
@@ -263,7 +266,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
             Node target = cur.right;
             Node targetParent = cur;
             // 找到右子树的最小节点（leftmost）。
-            while(target.left!=null) {
+            while (target.left != null) {
                 targetParent = target;
                 target = target.left;
             }
@@ -271,6 +274,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
             cur.data = target.data;
             // 将 Leftmost 节点的右子树复制给其父节点。
             targetParent.left = target.right;
+            // target 已经被转移到右子树的根节点。
+            // target.right = target = null;
         }
     }
 
