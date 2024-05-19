@@ -49,7 +49,7 @@ public class SuffixArray {
     // NOTICE: this method must be called after Suffix Array construction.
     // http://www.mi.fu-berlin.de/wiki/pub/ABI/RnaSeqP4/suffix-array.pdf
     public void buildLcpArray() {
-        if(sa == null){
+        if (sa == null) {
             throw new IllegalArgumentException("Must initialize the Suffix Array first!");
         }
         lcp = new int[N];
@@ -75,6 +75,7 @@ public class SuffixArray {
     // This actually takes O(n^2log(n)) time complexity since sorting takes on
     // average O(nlog(n)) and each String comparison takes O(n).
     private void constructSlow() {
+        // get all suffix strings.
         String[] tmp = new String[N];
         for (int i = 0; i < N; i++) {
             tmp[i] = text.substring(i);
