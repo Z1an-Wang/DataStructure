@@ -1,10 +1,10 @@
 package UnionFind;
 
-public class FastUnion_RankOpt extends UnionFind {
+public class UF_RankOpt extends UnionFind {
 
     private int[] rank;
 
-    public FastUnion_RankOpt(int capacity) {
+    public UF_RankOpt(int capacity) {
         super(capacity);
 
         // initialize the rank of each group.
@@ -46,7 +46,7 @@ public class FastUnion_RankOpt extends UnionFind {
     }
 
     public static void main(String[] args) {
-        FastUnion_RankOpt nf = new FastUnion_RankOpt(10);
+        UF_RankOpt nf = new UF_RankOpt(10);
         nf.union(1, 2);
         nf.union(2, 3);
         nf.union(5, 6);

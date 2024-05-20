@@ -1,10 +1,10 @@
 package UnionFind;
 
-public class FastUnion_SizeOpt extends UnionFind {
+public class UF_SizeOpt extends UnionFind {
 
     private int[] size;
 
-    public FastUnion_SizeOpt(int capacity) {
+    public UF_SizeOpt(int capacity) {
         super(capacity);
 
         // initialize the size of each group, each group only have 1 element.
@@ -46,7 +46,7 @@ public class FastUnion_SizeOpt extends UnionFind {
     }
 
     public static void main(String[] args) {
-        FastUnion_SizeOpt nf = new FastUnion_SizeOpt(10);
+        UF_SizeOpt nf = new UF_SizeOpt(10);
         nf.union(1, 2);
         nf.union(2, 3);
         nf.union(5, 6);
