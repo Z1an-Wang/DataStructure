@@ -31,4 +31,10 @@ public abstract class UnionFind {
     public boolean isSame(int v1, int v2) {
         return find(v1) == find(v2);
     }
+
+    protected void rangeCheck(int v) {
+        if (v < 0 || v >= parents.length) {
+            throw new IllegalArgumentException("v is out of bounds");
+        }
+    }
 }
