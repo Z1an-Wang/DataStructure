@@ -32,6 +32,11 @@ public abstract class UnionFind {
         return find(v1) == find(v2);
     }
 
+    // Return if elements 'p' and 'q' belong to the same component/set
+    public boolean isConnected(int p, int q) {
+        return find(p) == find(q);
+    }
+
     protected void rangeCheck(int v) {
         if (v < 0 || v >= parents.length) {
             throw new IllegalArgumentException("v is out of bounds");
